@@ -10,7 +10,7 @@
 if [ -z "$JSHINT" ]; then
 	JSHINT="jshint"
 fi
-name="gracenode-encrypt";
+name="gracenode-mongodb";
 cwd=`pwd`;
 # list directories/files to lint
 list=();
