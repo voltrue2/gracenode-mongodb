@@ -138,7 +138,6 @@ Collection.prototype.insert = function (values, cb) {
 		if (error) {
 			return cb(error);
 		}
-		logger.info('inserted to mongodb:', that._name, values);
 		cb(null, res);
 	});
 };
@@ -153,7 +152,6 @@ Collection.prototype.update = function (conditions, update, cb) {
 		if (error) {
 			return cb(error);
 		}
-		logger.info('updated document(s) in mongodb:', that._name, conditions, update);
 		cb(null, res);
 	});
 };
@@ -171,7 +169,6 @@ Collection.prototype.upsert = function (conditions, update, multi, cb) {
 		if (error) {
 			return cb(error);
 		}
-		logger.info('upserted document(s) in mongodb:', that._name, conditions, update, options);
 		cb(null, res);
 	});
 };
@@ -199,7 +196,6 @@ Collection.prototype.increment = function (conditions, propName, incValue, thres
 		if (!res) {
 			return cb(new Error('blockedExceedMaxIncrement'));
 		}
-		logger.info('incremented a property of document(s) in mongodb:', that._name, conditions, incValue, threshhold);
 		cb(null, res);
 	});
 };
@@ -229,7 +225,6 @@ Collection.prototype.decrement = function (conditions, propName, decrementValue,
 		if (!res) {
 			return cb(new Error('blockedNegativeDecrement'));
 		}
-		logger.info('decremented a property of document(s) in mongodb:', that._name, conditions, decrementValue);
 		cb(null, res);
 	});
 
@@ -251,7 +246,6 @@ Collection.prototype.delete = function (values, cb) {
 		if (error) {
 			return cb(error);
 		}
-		logger.info('deleted from mongodb:', that._name, values);
 		cb();
 	});
 };
@@ -268,7 +262,6 @@ Collection.prototype.save = function (values, cb) {
 		if (error) {
 			return cb(error);
 		}
-		logger.info('saved to mongodb:', that._name, values);
 		cb(null, res);
 	});
 };
@@ -283,8 +276,6 @@ Collection.prototype.findAndModify = function (query, sort, update, options, cb)
 		if (error) {
 			return cb(error);
 		}
-
-		logger.info('find and modified mongodb:', that._name, query, sort, update, options);
 		cb(null, result);	
 	});
 };
@@ -296,7 +287,6 @@ Collection.prototype.ensureIndex = function (indexes, options, cb) {
 		if (error) {
 			return cb(error);
 		}
-		logger.info('added index(es) to a document in mongodb:', that._name, indexes, options);
 		cb(null, res);
 	});
 };
@@ -308,7 +298,6 @@ Collection.prototype.count = function (query, cb) {
 		if (error) {
 			return cb(error);
 		}
-		logger.info('retrieved the document count for', that._name, ':', res);
 		cb(null, res);
 	});
 };
@@ -324,7 +313,6 @@ Collection.prototype.mapReduce = function (mapFunc, reduceFunc, options, cb) {
 		if (error) {
 			return cb(error);
 		}
-		logger.verbose('map function and reduce function assigned to ', that._name);
 		cb(null, results);
 	});
 };
