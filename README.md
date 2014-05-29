@@ -39,7 +39,7 @@ gracenode.mongodb
 Configurations
 ```javascript
 "modules": {
-	"mongodb": {
+	"gracenode-mongodb": {
 		"configNameOfYourChoice": {
 			"host": "host name or IP address",
 			"port": <port number>,
