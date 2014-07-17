@@ -13,7 +13,9 @@ var pools = {};
 		"host": "host name or ip address",
 		"port": port number,
 		"database": "database name",
-		"poolSize": <optional> // default is 5
+		"poolSize": <optional>, // default is 5
+		"user": "db user", // optional
+		"password": "db password" // optional
 	} {...}
 }
 */
@@ -30,7 +32,13 @@ module.exports.setup = function (cb) {
 	var client = mongodb.MongoClient;
 	async.eachSeries(keys, function (name, next) {
 		var configData = config[name];
-		var url = 'mongodb://' + configData.host + ':' + configData.port + '/' + configData.database;
+		var url = 'mongodb://';
+
+		if (configData.user && configData.password) {
+			url += configData.user + ':' + configData.password + '@';
+		}
+
+		url += configData.host + ':' + configData.port + '/' + configData.database;
 
 		if (configData.poolSize) {
 			url += '?maxPoolSize=' + configData.poolSize;
