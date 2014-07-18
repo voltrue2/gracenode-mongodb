@@ -44,7 +44,9 @@ Configurations
 			"host": "host name or IP address",
 			"port": <port number>,
 			"database": "database name",
-			"poolSize": <optional>
+			"poolSize": <optional>,
+			"user": <optional>,
+			"password": <optional>
 		}{...}
 	}
 }
