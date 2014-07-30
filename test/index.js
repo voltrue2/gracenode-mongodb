@@ -214,4 +214,11 @@ describe('mongodb module ->', function () {
 		});
 	});
 
+	it('Can remove an index', function (done) {
+		collection.dropIndex({ key: 1 }, function (error) {
+			assert.equal(error, undefined);
+			done();
+		});
+	})
+
 });
