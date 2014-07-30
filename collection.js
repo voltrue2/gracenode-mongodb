@@ -291,6 +291,17 @@ Collection.prototype.ensureIndex = function (indexes, options, cb) {
 	});
 };
 
+Collection.prototype.dropIndex = function (indexes, options, cb) {
+	logger.verbose('removing index(es) to a document in mongodb:', this._name, indexes, options);
+	var that = this;
+	this._collection.dropIndex(indexes, options, function (error, res) {
+		if (error) {
+			return cb(error);
+		}
+		cb(null, res);
+	});
+};
+
 Collection.prototype.count = function (query, cb) {
 	logger.verbose('getting count for', this._name, 'with query:', query);
 	var that = this;
