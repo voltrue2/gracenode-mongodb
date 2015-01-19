@@ -33,18 +33,54 @@ module.exports.setup = function (cb) {
 	async.eachSeries(keys, function (name, next) {
 		var configData = config[name];
 		var url = 'mongodb://';
+		var glue = '?';
 
-		if (configData.user && configData.password) {
-			url += configData.user + ':' + configData.password + '@';
+		if (Array.isArray(configData.host)) {
+			// connecting to multiple mongo
+			var isPortArray = Array.isArray(configData.port);
+			var userCred = '';
+			if (configData.user && configdata.password) {
+				userCred = configData.user + ':' + configData.password + '@';
+			}
+			for (var i = 0, len = configData.host.length; i < len; i++) {
+				url += userCred + configData.host[i] + ((isPortArray && configData.port[i]) ? ':' + configData.port[i] : '');
+				var end = ',';
+				if (i === len - 1) {
+					end = '/';
+				}
+				url += end;
+			}
+			url += configData.database;
+		} else {
+			// connecting to a single mongo
+			if (configData.user && configData.password) {
+				url += configData.user + ':' + configData.password + '@';
+			}
+
+			url += configData.host + ':' + configData.port + '/' + configData.database;
 		}
-
-		url += configData.host + ':' + configData.port + '/' + configData.database;
 
 		if (configData.poolSize) {
 			url += '?maxPoolSize=' + configData.poolSize;
 		}
+		
+		if (url.indexOf('?') !== -1) {
+			glue = '&';
+		}
 
-		logger.verbose('creating connection pool to mongodb [' +  configData.database + ']');
+		if (configData.replicaSet) {
+			url += glue + 'replicaSet=' + configData.replicaSet;
+		}
+		
+		if (url.indexOf('?') !== -1) {
+			glue = '&';
+		}
+	
+		if (configData.readPreference) {
+			url += glue + 'readPreference=' + configData.readPreference;
+		}
+	
+		logger.verbose('creating connection pool to mongodb [' +  configData.database + ']:', url);
 
 		client.connect(url, function (error, db) {
 			if (error) {
