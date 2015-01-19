@@ -41,12 +41,14 @@ Configurations
 "modules": {
 	"gracenode-mongodb": {
 		"configNameOfYourChoice": {
-			"host": "host name or IP address",
-			"port": <port number>,
+			"host": "host name or IP address" or an array of hosts,
+			"port": <port number> or an array of ports,
 			"database": "database name",
 			"poolSize": <optional>,
 			"user": <optional>,
-			"password": <optional>
+			"password": <optional>,
+			"replicaSet": <optional>,
+			"readPreference": "<optional>"
 		}{...}
 	}
 }

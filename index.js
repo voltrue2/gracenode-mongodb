@@ -10,12 +10,14 @@ var pools = {};
 /*
 "mongodb": {
 	"name of your choice": {
-		"host": "host name or ip address",
-		"port": port number,
+		"host": "host name or ip address" or an array of hosts,
+		"port": port number or an array of port numbers,
 		"database": "database name",
 		"poolSize": <optional>, // default is 5
 		"user": "db user", // optional
-		"password": "db password" // optional
+		"password": "db password" // optional,
+		"replicaSet": "target replicaset name" optional
+		"readPreference": "read preference (secondary etc)" optional
 	} {...}
 }
 */
