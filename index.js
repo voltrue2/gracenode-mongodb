@@ -41,7 +41,7 @@ module.exports.setup = function (cb) {
 			// connecting to multiple mongo
 			var isPortArray = Array.isArray(configData.port);
 			var userCred = '';
-			if (configData.user && configdata.password) {
+			if (configData.user && configData.password) {
 				userCred = configData.user + ':' + configData.password + '@';
 			}
 			for (var i = 0, len = configData.host.length; i < len; i++) {
