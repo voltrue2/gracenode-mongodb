@@ -36,16 +36,17 @@ module.exports.setup = function (cb) {
 		var configData = config[name];
 		var url = 'mongodb://';
 		var glue = '?';
+		
+		// use user and password
+		if (configData.user && configData.password) {
+			url += configData.user + ':' + configData.password + '@';
+		}
 
 		if (Array.isArray(configData.host)) {
 			// connecting to multiple mongo
 			var isPortArray = Array.isArray(configData.port);
-			var userCred = '';
-			if (configData.user && configData.password) {
-				userCred = configData.user + ':' + configData.password + '@';
-			}
 			for (var i = 0, len = configData.host.length; i < len; i++) {
-				url += userCred + configData.host[i] + ((isPortArray && configData.port[i]) ? ':' + configData.port[i] : '');
+				url += configData.host[i] + ((isPortArray && configData.port[i]) ? ':' + configData.port[i] : '');
 				var end = ',';
 				if (i === len - 1) {
 					end = '/';
@@ -55,10 +56,6 @@ module.exports.setup = function (cb) {
 			url += configData.database;
 		} else {
 			// connecting to a single mongo
-			if (configData.user && configData.password) {
-				url += configData.user + ':' + configData.password + '@';
-			}
-
 			url += configData.host + ':' + configData.port + '/' + configData.database;
 		}
 
