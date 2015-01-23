@@ -4,6 +4,12 @@ var gracenode = require('../gracenode');
 var logger = gracenode.log.create('mongodb');
 var Db = require('./db');
 
+var options = [
+	'poolSize',
+	'replicaSet',
+	'readPreference',
+	'slaveOk'
+];
 var config = null;
 var pools = {};
 
@@ -13,11 +19,12 @@ var pools = {};
 		"host": "host name or ip address" or an array of hosts,
 		"port": port number or an array of port numbers,
 		"database": "database name",
-		"poolSize": <optional>, // default is 5
 		"user": "db user", // optional
 		"password": "db password" // optional,
+		"poolSize": <int>, // optional default is 5
 		"replicaSet": "target replicaset name" optional
-		"readPreference": "read preference (secondary etc)" optional
+		"readPreference": "read preference (secondary etc)" optional,
+		"slaveOk": <boolean> optional
 	} {...}
 }
 */
@@ -59,25 +66,7 @@ module.exports.setup = function (cb) {
 			url += configData.host + ':' + configData.port + '/' + configData.database;
 		}
 
-		if (configData.poolSize) {
-			url += '?maxPoolSize=' + configData.poolSize;
-		}
-		
-		if (url.indexOf('?') !== -1) {
-			glue = '&';
-		}
-
-		if (configData.replicaSet) {
-			url += glue + 'replicaSet=' + configData.replicaSet;
-		}
-		
-		if (url.indexOf('?') !== -1) {
-			glue = '&';
-		}
-	
-		if (configData.readPreference) {
-			url += glue + 'readPreference=' + configData.readPreference;
-		}
+		url += createOptionParams(configData);
 	
 		logger.verbose('creating connection pool to mongodb [' +  configData.database + ']:', url);
 
@@ -118,3 +107,15 @@ module.exports.create = function (name) {
 	}
 	return null;
 };
+
+function createOptionParams(configData) {
+	var params = '';
+	var glue = '?';
+	for (var i = 0, len = options.length; i < len; i++) {
+		if (configData.hasOwnProperty(options[i])) {
+			params += glue + options[i] + '=' + configData[options[i]];
+			glue = '&';
+		}
+	}
+	return params;
+}

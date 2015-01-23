@@ -17,7 +17,11 @@
 			"test": {
 				"host": "127.0.0.1",
 				"port": 27017,
-				"database": "test"
+				"database": "test",
+				"maxPoolSize": 5,
+				"readPreference": "secondary",
+				"slaveOk": true,
+				"replicaSet": "test"
 			}
 		}
 	}
