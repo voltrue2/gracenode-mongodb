@@ -14,6 +14,44 @@ function Collection(dbName, name, collection) {
 	this._name = '[' +  dbName + '.' + name + ']';
 }
 
+Collection.prototype.applyOptions = function (find, options) {
+	if (options) {
+		if (options.sort) {
+			find = find.sort(options.sort);
+		}
+		if (options.limit) {
+			find = find.limit(options.limit);
+		}
+		if (options.offset) {
+			find = find.skip(options.offset);
+		}
+	}
+	return find;
+};
+
+/*
+query: <object>
+fields: <array>
+options: <object>
+options {
+	limit: <number>
+}
+
+return: stream
+
+stream.on('data', callback)
+stream.on('error', callback)
+stream.on('close', callback)
+*/
+Collection.prototype.stream = function (query, fields, options) {
+	
+	logger.verbose('execute a find query for data stream:', query, fields, options);
+
+	var find = this.applyOptions(this._collection.find(query, fields), options);
+
+	return find.stream();
+};
+
 /*
 query: <object>
 fields: <array>
@@ -57,12 +95,8 @@ Collection.prototype.findMany = function (query, fields, pagenate, cb) {
 		if (error) {
 			return cb(error);
 		}
-		if (pagenate && pagenate.limit !== undefined && pagenate.offset !== undefined) {
-			if (pagenate.sort) {
-				cursor = cursor.sort(pagenate.sort).limit(pagenate.limit).skip(pagenate.offset);
-			} else {
-				cursor = cursor.limit(pagenate.limit).skip(pagenate.offset);
-			}
+		if (pagenate) {
+			cursor = that.applyOptions(cursor, pagenate);
 			logger.verbose('query executed:', that._name, query, fields, pagenate);
 			return extractResults(cursor, cb);
 		}

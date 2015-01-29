@@ -40,6 +40,13 @@ describe('mongodb module ->', function () {
 		});
 	});
 
+	it('Can clean up the collection first', function (done) {
+		collection.delete({}, function (error) {
+			assert.equal(error, undefined);
+			done();
+		})
+	});
+
 	it('Can insert a document and find it', function (done) {
 		collection.insert(doc, function (error) {
 			assert.equal(error, undefined);
@@ -182,6 +189,68 @@ describe('mongodb module ->', function () {
 		collection.count({ key: 'test' }, function (error, count) {
 			assert.equal(error, undefined);
 			assert.equal(count, 2);
+			done();
+		});
+	});
+
+	it('Can "stream" 1 document', function (done) {
+		var stream = collection.stream({ key: 'test' }, [], { limit: 1 });
+		var list = [];
+		stream.on('data', function (data) {
+			list.push(data);
+		});
+		stream.on('error', function (error) {
+			throw error;
+		});
+		stream.on('close', function () {
+			assert.equal(list.length, 1);
+			done();
+		});
+	});
+
+	it('Can "stream" 1 document with offset of 1', function (done) {
+		var stream = collection.stream({ key: 'test' }, [], { limit: 1, offset: 1 });
+		var list = [];
+		stream.on('data', function (data) {
+			list.push(data);
+		});
+		stream.on('error', function (error) {
+			throw error;
+		});
+		stream.on('close', function () {
+			assert.equal(list.length, 1);
+			assert.equal(list[0]._id, 1);
+			done();
+		});
+	});
+
+	it('Can "stream" 2 documents', function (done) {
+		var stream = collection.stream({ key: 'test' }, [], { limit: 2 });
+		var list = [];
+		stream.on('data', function (data) {
+			list.push(data);
+		});
+		stream.on('error', function (error) {
+			throw error;
+		});
+		stream.on('close', function () {
+			assert.equal(list.length, 2);
+			done();
+		});
+	});
+
+	it('Can "stream" 2 sorted documents', function (done) {
+		var stream = collection.stream({ key: 'test' }, [], { limit: 2, sort: { _id: 1 } });
+		var list = [];
+		stream.on('data', function (data) {
+			list.push(data);
+			assert.equal(list.length, data._id);
+		});
+		stream.on('error', function (error) {
+			throw error;
+		});
+		stream.on('close', function () {
+			assert.equal(list.length, 2);
 			done();
 		});
 	});

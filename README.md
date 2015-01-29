@@ -70,9 +70,28 @@ Collection collection(String collectionName)
 
 ##### Collection class
 
+> **stream**
+<pre>
+Stream stream(Object query, Array fields, Object options)
+</pre>
+```javascript
+var myDb = gracenode.mongodb.create('myDb');
+var myCol = myDb.collection('myCol');
+var stream = myCol.stream({ age: { $gte: 20 } }, ['_id', 'name', 'age'], { limit: 100 });
+stream.on('data', function (data) {
+	// read one record at a time up to limit (100)
+});
+stream.on('error', function (error) {
+	// error
+});
+stream.on('close', function () {
+	// all done
+});
+```
+
 > **findOne**
 <pre>
-void findOne(Object query, Array, fields, Function callback)
+void findOne(Object query, Array fields, Function callback)
 </pre>
 ```javascript
 var myDb = gracenode.mongodb.create('myDb');
@@ -90,7 +109,7 @@ void findMany(Object query, Array fields, Object pagenate, Function callback)
 var myDb = gracenode.mongodb.create('myDb');
 var myCol = myDb.collection('myCol');
 // query upto 10 documents and offset from 5th record matched. Plus sort the records by 'age'
-myCol.findMany({ _id: 123456 }, ['_id', 'name'], { limit: 10, offset: 5, sort: 'age' }, function (error, doc) {
+myCol.findMany({ _id: 123456 }, ['_id', 'name'], { limit: 10, offset: 5, sort: { age: -1 } }, function (error, doc) {
 	// do something
 });
 ```
@@ -106,7 +125,7 @@ Example:
 ```javascript
 var myDb = gracenode.mongodb.create('myDb');
 var myCol = gracenode.mongodb.collection('myCol');
-myCol.findEach({ _id: /name/ }, ['age'], { age: -1 }, function (list, next) {
+myCol.findEach({ _id: /name/ }, ['age'], { sort: { age: -1 } }, function (list, next) {
 	// do something with list
 	next();
 },
