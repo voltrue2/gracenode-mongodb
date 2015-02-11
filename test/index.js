@@ -1,3 +1,4 @@
+var async = require('async');
 var assert = require('assert');
 var gn = require('gracenode');
 var prefix = require('./prefix');
@@ -41,7 +42,7 @@ describe('mongodb module ->', function () {
 	});
 
 	it('Can clean up the collection first', function (done) {
-		collection.delete({}, function (error) {
+		collection.delete({ key: 'test' }, function (error) {
 			assert.equal(error, undefined);
 			done();
 		})
@@ -219,7 +220,7 @@ describe('mongodb module ->', function () {
 		});
 		stream.on('close', function () {
 			assert.equal(list.length, 1);
-			assert.equal(list[0]._id, 1);
+			assert.equal(list[0]._id, 2);
 			done();
 		});
 	});
@@ -274,6 +275,46 @@ describe('mongodb module ->', function () {
 			assert.equal(list.length, 2);
 			done();
 		});
+	});
+
+	it('Can execute aggregate on documents', function (done) {
+		var counter = 0;
+		
+		var docInserter = function (next) {
+			var doc = {
+				key: 'test',
+				shared: 100,
+				id: Date.now(),
+				value: 10 
+			};
+			collection.insert(doc, function (error) {
+				counter++;
+				next(error);
+			});
+		};
+	 
+		var aggregate = function (next) {
+			collection.aggregate([
+				{ $match: { key: 'test', shared: 100 } },
+				{ $group: { _id: '$id', valueAvg: { $avg: '$value' } } }
+			],
+			function (error, res) {
+				for (var i = 0, len = res.length; i < len; i++) {
+					assert.equal(res[i].valueAvg, 10);
+				}
+				done();
+			});
+		}; 
+
+		var tasks = [
+			docInserter,
+			docInserter,
+			docInserter,
+			docInserter,
+		];
+
+		async.series(tasks, aggregate);
+
 	});
 
 	it('Can delete documents', function (done) {

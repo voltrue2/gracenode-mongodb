@@ -29,6 +29,19 @@ Collection.prototype.applyOptions = function (find, options) {
 	return find;
 };
 
+Collection.prototype.aggregate = function (pipeline, cb) {
+	
+	logger.verbose('execute aggregate:', pipeline);
+
+	this._collection.aggregate(pipeline, function (error, res) {
+		if (error) {
+			return cb(error);
+		}
+		logger.verbose('aggregate executed:', pipeline, res);
+		cb(null, res);
+	});
+};
+
 /*
 query: <object>
 fields: <array>
