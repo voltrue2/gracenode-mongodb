@@ -54,26 +54,22 @@ Configurations
 }
 ```
 
-#####API: *create*
-<pre>
-Db create(String configName)
-</pre>
-> Returns an instance of Db class
+##### .create(configName [string])
 
-##### Db class
+Returns an instance of Db class
 
-> **collection**
-<pre>
-Collection collection(String collectionName)
-</pre>
-> Returns an instance of Collection class
+#### Db class
 
-##### Collection class
+##### .collection(collectionName [string])
 
-> **stream**
-<pre>
-Stream stream(Object query, Array fields, Object options)
-</pre>
+Returns an instance of Collection class
+
+#### Collection class
+
+##### .stream(query [object], fields [array], options [object])
+
+This is very useful when reading a very large data set
+
 ```javascript
 var myDb = gracenode.mongodb.create('myDb');
 var myCol = myDb.collection('myCol');
@@ -89,10 +85,8 @@ stream.on('close', function () {
 });
 ```
 
-> **findOne**
-<pre>
-void findOne(Object query, Array fields, Function callback)
-</pre>
+##### .findOne(query [object], fields [array], callback [function])
+
 ```javascript
 var myDb = gracenode.mongodb.create('myDb');
 var myCol = myDb.collection('myCol');
@@ -101,10 +95,8 @@ myCol.findOne({ _id: 123456 }, ['_id', 'name'], function (error, doc) {
 });
 ```
 
-> **findMany**
-<pre>
-void findMany(Object query, Array fields, Object pagenate, Function callback)
-</pre>
+##### .findMany(query [object], feilds [array], pagenate [object], callback [function])
+
 ```javascript
 var myDb = gracenode.mongodb.create('myDb');
 var myCol = myDb.collection('myCol');
@@ -114,14 +106,16 @@ myCol.findMany({ _id: 123456 }, ['_id', 'name'], { limit: 10, offset: 5, sort: {
 });
 ```
 
-> **findEach**
-<pre>
-void findEach(Object querym Array fields, Int limit, Object [sort*], Function eachCallback, Function finalCallback)
-</pre>
+##### .findEach(query [object], fields [array], limit [integer], sort [*object], eachCallback [function], finalCallback [function])
+
 Executes findMany with the given limit and auto-iterate until it finds no more record. Each iteration will call eachCallback.
+
 When it reaches the end, it will call finalCallback.
+
 This operation can be very expensive.
+
 Example:
+
 ```javascript
 var myDb = gracenode.mongodb.create('myDb');
 var myCol = gracenode.mongodb.collection('myCol');
@@ -134,58 +128,32 @@ function (error) {
 });
 ```
 
-> **ensureIndex**
-<pre>
-void ensureIndex(Object indexes, Object options, Function callback)
-</pre>
+##### .ensureIndex(indexes [object], options [object], callback [function])
 
-> **insert**
-<pre>
-void insert(Object values, Function callback)
-</pre>
+##### .insert(values [object], callback [function])
 
-> **update**
-(safe and multi are always true and upsert is false)
-<pre>
-void update(Object conditions, Object updates, Function callback)
-</pre>
+##### .update(conditions [object], updates [object], callback [function])
 
-> **upsert**
-<pre>
-void upsert(Object conditions, Object updates, Boolean multi, Function callback)
-</pre>
+**NOTE**: safe and multi are always true and upsert is false)
 
-> **increment**
-(does NOT allow the target property to exceed maximum number given)
-<pre>
-void increment(Object conditions, String propertyName, Number incrementBy, Number maximumNumberAllowed, Function callback)
-</pre>
+##### .upsert(conditions [object], updates [object], multi [boolean], callback [function])
 
-> **decrement**
-(does NOT allow the target property to fall below 0)
-<pre>
-void decrement(Object conditions, String propertyName, Number decrementBy, Function callback)
-</pre>
+##### .increment(conditions [object], propertyName [string], incrementBy [number], maxNumAllowed [number], callback [function])
 
-> **save**
-<pre>
-void save(Object values, Function callback)
-</pre>
+Does NOT allow the target property to exceed maximum number given
 
-> **delete**
-<pre>
-void delete(Object values, Function callback)
-</pre>
+##### .decrement(conditions [object], propertyName [string], decrementBy [number], callback [function])
 
-> **findAndModify**
-<pre>
-void fundAndModify(Object query, Object sort, Object update, Object options, Function callback)
-</pre>
+Does NOT allow the target property to fall below 0
 
-> **count**
-<pre>
-void count(Object query, Function callback)
-</pre>
+##### .save(values [object], callback [function])
+
+##### .delete(values [object], callback [function])
+
+##### .findAndModify(query [object], sort [object], update [object], options [object], callback [function])
+
+##### .count(object query, callback [function])
+
 ```javascript
 var mongo = gracenode.mongodb.create('mongoDatabase').collection('cookieJar');
 mongo.count({ type: 'cookies' }, function (error, count) {
@@ -193,8 +161,8 @@ mongo.count({ type: 'cookies' }, function (error, count) {
 });
 ```
 
-> **mapReduce**
-<pre>
-void mapReduce(Function map, Function reduce, Object options, Function callback)
-</pre>
+##### .mapReduce(map [function], reduce [function], options [object], callback [function])
+
 <a href="http://docs.mongodb.org/manual/tutorial/map-reduce-examples/">MongoDB Map Reduce Example</a>
+
+##### .aggregate(pipeline [array], callback [function])

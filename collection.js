@@ -1,5 +1,6 @@
 var gracenode = require('../gracenode');
 var logger = gracenode.log.create('mongodb-collection');
+var EventEmitter = require('events').EventEmitter;
 
 var updateOptions = {
 	safe: true,
@@ -62,7 +63,39 @@ Collection.prototype.stream = function (query, fields, options) {
 
 	var find = this.applyOptions(this._collection.find(query, fields), options);
 
-	return find.stream();
+	var emitter = new EventEmitter();
+
+	var stream = find.stream();
+
+	// this is very useful when handling a very large batch of data
+	stream.on('data', function (data) {
+		setImmediate(function () {
+	
+			logger.verbose('streaming query:', query, '\ndata:', data);
+
+			emitter.emit('data', data);
+		});
+	});
+
+	stream.on('error', function (error) {
+		setImmediate(function () {
+	
+			logger.error('streaming error', query, error);
+
+			emitter.emit('error', error);
+		});
+	});
+
+	stream.on('close', function () {
+		setImmediate(function () {
+
+			logger.verbose('streaming closed', query);
+
+			emitter.emit('close');
+		});
+	});
+
+	return emitter;
 };
 
 /*
