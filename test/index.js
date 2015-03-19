@@ -17,6 +17,7 @@ describe('mongodb module ->', function () {
 		num: 0
 	};
 
+	var db;
 	var collection;
 
 	it('Can create connections', function (done) {
@@ -26,7 +27,7 @@ describe('mongodb module ->', function () {
 		gn.use('gracenode-mongodb');
 		gn.setup(function (error) {
 			assert.equal(error, undefined);
-			var db = gn.mongodb.create('test');
+			db = gn.mongodb.create('test');
 			collection = db.collection('unit-test');
 			assert(collection);
 			done();
@@ -330,5 +331,21 @@ describe('mongodb module ->', function () {
 			done();
 		});
 	})
+
+	it('Can get a list of all collection details in a database', function (done) {
+		db.collections(function (error, list) {
+			assert.equal(error, null);
+			assert(list);
+			done();
+		});
+	});
+	
+	it('Can get a list of all collection names in a database', function (done) {
+		db.collectionNames(function (error, list) {
+			assert.equal(error, null);
+			assert(list);
+			done();
+		});
+	});
 
 });
