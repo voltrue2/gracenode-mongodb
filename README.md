@@ -62,6 +62,8 @@ Returns an instance of Db class
 
 ##### .collection(collectionName [string])
 
+Returns an instance of Collection class
+
 ##### .collectionNames(callback [function])
 
 Returns a list of all collection names in a database.
@@ -69,8 +71,6 @@ Returns a list of all collection names in a database.
 ##### .collections(callback [function])
 
 Returns detailed collection metadata in a database.
-
-Returns an instance of Collection class
 
 #### Collection class
 
