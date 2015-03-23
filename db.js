@@ -11,6 +11,18 @@ Db.prototype.collection = function (name) {
 	return new Collection(this._name, name, this._db.collection(name));
 };
 
+Db.prototype.drop = function (name, cb) {
+	var collection = this._db.collection(name);
+	collection.drop(function (error, reply) {
+		if (error) {
+			logger.error(error);
+			return cb(error);
+		}
+		logger.info('collection [' + name + '] dropped');
+		cb(null, reply);
+	});
+};
+
 Db.prototype.collectionNames = function (cb) {
 	this._db.collectionNames(function (error, list) {
 		if (error) {

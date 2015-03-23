@@ -348,4 +348,12 @@ describe('mongodb module ->', function () {
 		});
 	});
 
+	it('Can drop a collection', function (done) {
+		db.drop('unit-test', function (error, reply) {
+			assert.equal(error, null);
+			assert(reply);
+			done();
+		});
+	});
+
 });

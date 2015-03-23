@@ -72,7 +72,11 @@ Returns a list of all collection names in a database.
 
 Returns detailed collection metadata in a database.
 
-#### Collection class
+##### .drop(collectionName [string], callback [function])
+
+Drops an entire collection.
+
+### Collection class
 
 ##### .stream(query [object], fields [array], options [object])
 
