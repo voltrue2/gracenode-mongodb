@@ -129,6 +129,7 @@ pagenate: {
 	limit: <int>
 	offset: <int>
 	sort: <object>,
+	asArray: <bool>
 }
 */
 Collection.prototype.findMany = function (query, fields, pagenate, cb) {
@@ -143,7 +144,13 @@ Collection.prototype.findMany = function (query, fields, pagenate, cb) {
 		}
 		if (pagenate) {
 			cursor = that.applyOptions(cursor, pagenate);
+			
 			logger.verbose('query executed:', that._name, query, fields, pagenate);
+
+			if (pagenate.asArray) {
+				return cursor.toArray(cb);	
+			}
+
 			return extractResults(cursor, cb);
 		}
 		// no pagenation
@@ -199,6 +206,21 @@ Collection.prototype.findEach = function (query, fields, limit, sort, eachCallba
 	};
 
 	iterator(pagenate, cb);
+};
+
+Collection.prototype.distinct = function (key, filterQuery, options, cb) {
+	
+	logger.verbose('execute distinct on:', key, filterQuery, options);
+
+	this._collection.distinct(key, filterQuery, options, function (error, doc) {
+		if (error) {
+			logger.error(error);
+			return cb(error);
+		}
+		logger.verbose('executed distinct:', doc);
+		cb(null, doc);
+	});
+
 };
 
 /*
@@ -348,15 +370,31 @@ Collection.prototype.save = function (values, cb) {
 
 Collection.prototype.findAndModify = function (query, sort, update, options, cb) {
 	
-	logger.verbose('find and modifying mongodb:', this._name, query, sort, update, options);
-
-	var that = this;
+	logger.verbose('find and modifying:', query, sort, update, options);
 
 	this._collection.findAndModify(query, sort, update, options, function (error, result) {
 		if (error) {
 			return cb(error);
 		}
+
+		logger.info('find and modified:', query, sort, update, result);
+
 		cb(null, result);	
+	});
+};
+
+Collection.prototype.findAndRemove = function (query, sort, options, cb) {
+	
+	logger.verbose('find and removing:', query, sort, options);
+
+	this._collection.findAndRemove(query, sort, options, function (error, result) {
+		if (error) {
+			return cb(error);
+		}
+		
+		logger.info('find and removed:', query, sort, result);
+		
+		cb(null, result);
 	});
 };
 

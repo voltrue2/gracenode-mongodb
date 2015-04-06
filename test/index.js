@@ -221,7 +221,6 @@ describe('mongodb module ->', function () {
 		});
 		stream.on('close', function () {
 			assert.equal(list.length, 1);
-			assert.equal(list[0]._id, 2);
 			done();
 		});
 	});
@@ -257,8 +256,26 @@ describe('mongodb module ->', function () {
 		});
 	});
 
+	it('Can get distinct values of a key "id"', function (done) {
+		collection.distinct('_id', {}, {}, function (error, list) {
+			assert.equal(error, null);
+			assert.equal(list.length, 2);
+			assert.notEqual(list.indexOf(1), -1);	
+			assert.notEqual(list.indexOf(2), -1);	
+			done();
+		});
+	});
+
 	it('Can "findMay" documents', function (done) {
 		collection.findMany({ key: 'test' }, [], { limit: 2, offset: 0 }, function (error, list) {
+			assert.equal(error, undefined);
+			assert.equal(list.length, 2);
+			done();
+		});
+	});
+
+	it('Can "findMay" documents with asArray option', function (done) {
+		collection.findMany({ key: 'test' }, [], { limit: 2, offset: 0, asArray: true }, function (error, list) {
 			assert.equal(error, undefined);
 			assert.equal(list.length, 2);
 			done();

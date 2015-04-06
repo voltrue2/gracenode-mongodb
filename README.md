@@ -109,6 +109,19 @@ myCol.findOne({ _id: 123456 }, ['_id', 'name'], function (error, doc) {
 
 ##### .findMany(query [object], feilds [array], pagenate [object], callback [function])
 
+pagenate:
+
+```
+{
+	limit: <int>
+	offset: <int>
+	sort: <object>
+	asArray: <boolean>
+}
+```
+
+**NOTE:** If `asArray` in `pagenate` is `true`, it will use `.toArray()` to read the data.
+
 ```javascript
 var myDb = gracenode.mongodb.create('myDb');
 var myCol = myDb.collection('myCol');
