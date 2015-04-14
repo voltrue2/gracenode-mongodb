@@ -116,11 +116,11 @@ pagenate:
 	limit: <int>
 	offset: <int>
 	sort: <object>
-	asArray: <boolean>
+	toArray: <boolean>
 }
 ```
 
-**NOTE:** If `asArray` in `pagenate` is `true`, it will use `.toArray()` to read the data.
+**NOTE:** If `toArray` in `pagenate` is `true`, it will use `.toArray()` to read the data.
 
 ```javascript
 var myDb = gracenode.mongodb.create('myDb');

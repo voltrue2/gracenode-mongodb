@@ -274,8 +274,8 @@ describe('mongodb module ->', function () {
 		});
 	});
 
-	it('Can "findMay" documents with asArray option', function (done) {
-		collection.findMany({ key: 'test' }, [], { limit: 2, offset: 0, asArray: true }, function (error, list) {
+	it('Can "findMay" documents with toArray option', function (done) {
+		collection.findMany({ key: 'test' }, [], { limit: 2, offset: 0, toArray: true }, function (error, list) {
 			assert.equal(error, undefined);
 			assert.equal(list.length, 2);
 			done();

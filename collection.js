@@ -129,7 +129,7 @@ pagenate: {
 	limit: <int>
 	offset: <int>
 	sort: <object>,
-	asArray: <bool>
+	toArray: <bool>
 }
 */
 Collection.prototype.findMany = function (query, fields, pagenate, cb) {
@@ -147,7 +147,7 @@ Collection.prototype.findMany = function (query, fields, pagenate, cb) {
 			
 			logger.verbose('query executed:', that._name, query, fields, pagenate);
 
-			if (pagenate.asArray) {
+			if (pagenate.toArray) {
 				return cursor.toArray(cb);	
 			}
 
